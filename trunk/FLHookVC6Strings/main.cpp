@@ -1,57 +1,67 @@
 #include <windows.h>
 #include <string>
 #include <map>
+
+#pragma comment(lib, "../plugins/flhookplugin_sdk/libs/FLCoreCommon.lib")
+
+#define              EXPORT __declspec(dllexport)
+#define              IMPORT __declspec(dllimport)
+#define    OBJECT_DATA_SIZE 2048
+#define WIN32_LEAN_AND_MEAN
+
 using namespace std;
 
-extern "C" __declspec(dllexport) wstring* CreateWString(wchar_t *wszStr)
-{
+/* functionPrototypes
+extern "C" EXPORT wstring* CreateWString(wchar_t *wszStr);
+extern "C" EXPORT void FreeWString(wstring *wscStr);	
+extern "C" EXPORT string* CreateString(char *szStr);	
+extern "C" EXPORT void FreeString(string *scStr);
+extern "C" EXPORT const char *GetCString(string *scStr);
+extern "C" EXPORT const wchar_t *GetWCString(wstring *wscStr);
+extern "C" EXPORT void WStringAssign(wstring *wscStr, const wchar_t *wszCStr);
+extern "C" EXPORT void WStringAppend(wstring *wscStr, const wchar_t *wszCStr);
+extern "C" EXPORT wstring *CPlayerAccount_GetServerSignature(CPlayerAccount* cpa, const char* sig);
+*/
+
+extern "C" EXPORT wstring *CreateWString(wchar_t *wszStr) {
 	wstring *wscStr = new wstring;
 	*wscStr = wszStr;
-	return wscStr;
+
+	return (wscStr);
 }
 
-extern "C" __declspec(dllexport) void FreeWString(wstring *wscStr)
-{
+extern "C" EXPORT void FreeWString(wstring *wscStr) {
 	delete wscStr;
 }
 
-extern "C" __declspec(dllexport) string* CreateString(char *szStr)
-{
+extern "C" EXPORT string *CreateString(char *szStr) {
 	string *scStr = new string;
 	*scStr = szStr;
-	return scStr;
+
+	return (scStr);
 }
 
-extern "C" __declspec(dllexport) void FreeString(string *scStr)
-{
+extern "C" EXPORT void FreeString(string *scStr) {
 	delete scStr;
 }
 
-extern "C" __declspec(dllexport) const char* GetCString(string *scStr)
-{
-	return scStr->c_str();
+extern "C" EXPORT const char *GetCString(string *scStr) {
+	return (scStr->c_str());
 }
 
-extern "C" __declspec(dllexport) const wchar_t* GetWCString(wstring *wscStr)
-{
-	return wscStr->c_str();
+extern "C" EXPORT const wchar_t *GetWCString(wstring *wscStr) {
+	return (wscStr->c_str());
 }
 
-extern "C" __declspec(dllexport) void WStringAssign(wstring *wscStr, const wchar_t *wszCStr)
-{
+extern "C" EXPORT void WStringAssign(wstring *wscStr, const wchar_t *wszCStr) {
 	wscStr->assign(wszCStr);
 }
 
-extern "C" __declspec(dllexport) void WStringAppend(wstring *wscStr, const wchar_t *wszCStr)
-{
+extern "C" EXPORT void WStringAppend(wstring *wscStr, const wchar_t *wszCStr) {
 	wscStr->append(wszCStr);
 }
 
-#define OBJECT_DATA_SIZE	2048
-#pragma comment(lib, "../plugins/flhookplugin_sdk/libs/FLCoreCommon.lib")
-
-class __declspec(dllimport) CPlayerAccount
-{
+class IMPORT CPlayerAccount {
 public:
 	CPlayerAccount(class CPlayerAccount const &);
 	CPlayerAccount(void);
@@ -79,12 +89,11 @@ public:
 	unsigned char data[OBJECT_DATA_SIZE];
 };
 
-extern "C" __declspec(dllexport) wstring* CPlayerAccount_GetServerSignature(CPlayerAccount* cpa, const char* sig)
-{
-	wstring ws = cpa->GetServerSignature(sig);
+extern "C" EXPORT wstring *CPlayerAccount_GetServerSignature(CPlayerAccount* cpa, const char* sig) {
+	wstring ws = { cpa->GetServerSignature(sig) };
 
 	wstring* ws2 = new wstring;
 	ws2->assign(ws);
 
-	return ws2;
+	return (ws2);
 }
